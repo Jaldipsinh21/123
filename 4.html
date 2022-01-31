@@ -1,0 +1,98 @@
+<html lang="en">
+
+<body>
+    <div>
+        <table cellpadding="5" cellspacing="5">
+            <tbody>
+                <tr class="heading">
+                    <td>
+                        Item
+                    </td>
+
+                    <td>
+                        Unit Cost
+                    </td>
+
+                    <td>
+                        Quantity
+                    </td>
+
+                    <td>
+                        Price
+                    </td>
+                </tr>
+
+                <tr class="item">
+                    <td>
+                        <input value="">
+                    </td>
+
+                    <td>
+                        ₹ <input type="number" value="">
+                    </td>
+
+                    <td>
+                        <input type="number" value="">
+                    </td>
+
+                    <td>
+
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="4">
+                        <button class="btn-add-row">Add row</button>
+                    </td>
+                </tr>
+
+                <tr class="total">
+                    <td colspan="3"></td>
+
+                    <td>
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+    crossorigin="anonymous"></script>
+<script id="rendered-js">
+    $('table').on('mouseup keyup', 'input[type=number]', () => calculateTotals());
+
+    $('.btn-add-row').on('click', () => {
+        const $lastRow = $('.item:last');
+        const $newRow = $lastRow.clone();
+
+        $newRow.find('input').val('');
+        $newRow.find('td:last').text('$0.00');
+        $newRow.insertAfter($lastRow);
+
+        $newRow.find('input:first').focus();
+    });
+
+    function calculateTotals() {
+        const subtotals = $('.item').map((idx, val) => calculateSubtotal(val)).get();
+        const total = subtotals.reduce((a, v) => a + Number(v), 0);
+        $('.total td:eq(1)').text(formatAsCurrency(total));
+    }
+
+    function calculateSubtotal(row) {
+        const $row = $(row);
+        const inputs = $row.find('input');
+        const subtotal = inputs[1].value * inputs[2].value;
+
+        $row.find('td:last').text(formatAsCurrency(subtotal));
+
+        return subtotal;
+    }
+
+    function formatAsCurrency(amount) {
+        return `₹${Number(amount).toFixed(2)}`;
+    }
+//# sourceURL=pen.js
+</script>
+
+</html>
